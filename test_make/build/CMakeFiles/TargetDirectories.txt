@@ -1,3 +1,0 @@
-/home/ljy/OS_projects/test_make/build/CMakeFiles/test_make.dir
-/home/ljy/OS_projects/test_make/build/CMakeFiles/edit_cache.dir
-/home/ljy/OS_projects/test_make/build/CMakeFiles/rebuild_cache.dir
