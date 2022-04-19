@@ -58,26 +58,26 @@ void main(){
     printf("case1) Insert Input\n");
     printHashTable();
 
-    // for(i=0;i<INSERT_OBJECT_SIZE;i++){
-    //     DeleteProcess(i);
-    // }
+    for(i=0;i<INSERT_OBJECT_SIZE;i++){
+        DeleteProcess(i);
+    }
 
-    // printf("case1) Delete All\n");
-    // printHashTable();
+    printf("case1) Delete All\n");
+    printHashTable();
 
-    // //testcase2
-    // for(i=0;i<INSERT_OBJECT_SIZE;i++){
-    //     InsertObjectToTail(GetObjectFromObjFreeList(),i);
-    // }
+    //testcase2
+    for(i=0;i<INSERT_OBJECT_SIZE;i++){
+        InsertObjectToTail(GetObjectFromObjFreeList(),i);
+    }
 
-    // for(i=8;i<16;i++){
-    //     DeleteProcess(i);
-    //     InsertObjectToHead(GetObjectFromObjFreeList(),i);
-    // }
-    // for(i=32;i<40;i++){
-    //     DeleteProcess(i);
-    //     InsertObjectToHead(GetObjectFromObjFreeList(),i);
-    // }
-    // printf("case2)\n");
-    // printHashTable();
+    for(i=8;i<16;i++){
+        DeleteProcess(i);
+        InsertObjectToHead(GetObjectFromObjFreeList(),i);
+    }
+    for(i=32;i<40;i++){
+        DeleteProcess(i);
+        InsertObjectToHead(GetObjectFromObjFreeList(),i);
+    }
+    printf("case2)\n");
+    printHashTable();
 }

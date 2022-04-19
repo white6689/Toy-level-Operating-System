@@ -56,10 +56,13 @@ void InsertObjectToHead(Object* pObj, int objNum){
 Object* GetObjectByNum(int objnum){    
     //objnum을 이용해 HashTable에 있는 object의 포인터를 반환한다.
     //실패시 NULL반환
+    //printf("GetObjectByNum: objnum(%d)\n", objnum);
     int index=objnum%HASH_TBL_SIZE;
-    for(Object* i=pHashTableEnt[index].pHead;i!=NULL;i=i->phNext){
-        if(i->objnum==objnum)
-            return i;
+    Object* temp=pHashTableEnt[index].pHead;
+    for(int j=0;j<pHashTableEnt[index].elmtCount;j++){
+        if(temp->objnum==objnum)
+            return temp;
+        temp=temp->phNext;
     }
     return NULL;
 }
@@ -90,11 +93,45 @@ Object* GetObjectFromObjFreeList(){
 }
 
 BOOL DeleteObject(Object* pObj){
-    //HashTable에서 pObj를 삭제한다.
+    //HashTable에서 해당 pObj를 삭제한다.
     //성공시 TRUE 반환
     //실패시 FALSE 반환, HashTable에 해당 pObj가 없을 때 발생
     
-
+    // printf("DeleteObject: %p/%d\n", pObj, pObj->objnum);
+    int index=pObj->objnum%HASH_TBL_SIZE;
+    if((pHashTableEnt[index].pHead==pObj)&&(pHashTableEnt[index].pTail==pObj)){
+        // printf("This is last one: %p/%d\n", pObj, pObj->objnum);
+        pHashTableEnt[index].pHead=NULL;
+        pHashTableEnt[index].pTail=NULL;
+    }
+    else if(pHashTableEnt[index].pHead==pObj){
+        pHashTableEnt[index].pHead=pHashTableEnt[index].pHead->phNext;
+        pHashTableEnt[index].pHead->phPrev=NULL;
+    }
+    else if(pHashTableEnt[index].pTail==pObj){
+        pHashTableEnt[index].pTail=pHashTableEnt[index].pTail->phPrev;
+        pHashTableEnt[index].pTail->phNext=NULL;
+    }
+    else
+    {
+        //해당 pObj가 HashTable에 없을 경우? 해당 index에 pObj가 없을 경우
+        //chk가 1일 경우 있음, 0일 경우 없음 return false
+        int chk=0;
+        Object* temp=pHashTableEnt[index].pHead;
+        for(int j=0;j<pHashTableEnt[index].elmtCount;j++){
+            if(temp==pObj)
+                chk=1;
+            temp=temp->phNext;
+        }
+        if(chk==0)
+            return 0;
+        pObj->phNext->phPrev=pObj->phPrev;
+        pObj->phPrev->phNext=pObj->phNext;
+    }
+    pObj->phNext=NULL;
+    pObj->phPrev=NULL;
+    pHashTableEnt[index].elmtCount-=1;
+    return 1;
 }
 
 void InsertObjectIntoObjFreeList(Object* pObj){
@@ -107,7 +144,7 @@ void InsertObjectIntoObjFreeList(Object* pObj){
     //2. object의 phPrev를 HEAD로 연결
     //3. object의 phNext는 원래 HEAD의 phNext가 가리키고 있던 object
 
-    //printf("Do insert Object into FreeList %d\n", pObj->objnum);
+    // printf("Do insert Object into FreeList %d\n", pObj->objnum);
     if(pFreeListHead==NULL){
         pFreeListHead=pObj;
         pFreeListTail=pObj;
